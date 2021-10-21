@@ -1,10 +1,10 @@
 #!/bin/bash
 set -x
 
-CAPTLD=$CAPTLD
-LOTLD=local
 CAPDN=MYDOMAIN
+CAPTLD=LOCAL
 LODN=mydomain
+LOTLD=local
 DCADMIN=administrator
 ALLOWED_GROUPS="sec-dev sec-prod"
 
@@ -15,7 +15,7 @@ cp -n /etc/krb5.conf{,.bak}
 
 # nano /etc/krb5.conf
 # default_realm = MYDOMAIN.LOCAL
-sed -i 's/^#.*default_realm.*/default_realm = $CAPDN.$CAPTLD/g' /etc/krb5.conf
+sed -i "s/^#.*default_realm.*/default_realm = $CAPDN.$CAPTLD/g" /etc/krb5.conf
 
 # ### Ubuntu only: nano /etc/nsswitch.conf # EDIT:
 # hosts:          files dns mdns4_minimal [NOTFOUND=return]
@@ -34,8 +34,8 @@ cp -n /etc/sssd/sssd.conf /etc/sssd/sssd.conf.bak
 # ###for section [domain/mydomain.local] change:
 # fallback_homedir = /home/MYDOMAIN/%u
 # use_fully_qualified_names = False
-sed -i 's/^fallback_homedir.*/fallback_homedir = \/home\/$CAPDN\/%u/g' /etc/sssd/sssd.conf
-sed -i 's/^use_fully_qualified_names.*/use_fully_qualified_names = False/g' /etc/sssd/sssd.conf
+sed -i "s/^fallback_homedir.*/fallback_homedir = \/home\/$CAPDN\/%u/g" /etc/sssd/sssd.conf
+sed -i "s/^use_fully_qualified_names.*/use_fully_qualified_names = False/g" /etc/sssd/sssd.conf
 
 # Treat the specified names as groups rather than user login names. Permit login by users in the specified groups:
 realm permit -g $ALLOWED_GROUPS
